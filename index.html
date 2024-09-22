@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <title>Калькулятор сонячних панелей</title>
+    <style>
+        body{
+            font-family: Georgia, serif;
+            background-color: whitesmoke;
+        }
+        nav{
+            width: 25%;
+            position:sticky;
+            top: 0;
+            display: flex;
+            align-items: left;
+
+        }
+        #nav-items{
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+            align-items: center;
+        }
+        #main{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #myBtn{
+            margin: 10px;
+        }
+        #information-btn{
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        #information-btn:hover,
+        #information-btn:focus{
+            border-color: rgba(0, 0, 0, 0.15);
+            filter: drop-shadow(5px 5px 15px grey);
+            color: rgba(0, 0, 0, 0.65);
+            transform: translateY(-1px);
+        }
+        #information{
+            width: 40px;
+            margin-top: 10px;
+        }
+        #inputs{
+            padding: 60px 20px 60px 20px;
+            margin: 50px;
+            width: 40vw;
+            background-color: antiquewhite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;  
+        }
+        label{
+            font-size: 1.3em;
+            text-align: center;
+        }
+        input{
+            max-width: 200px;
+            padding: 10px;
+            text-align: center;
+            margin: 10px; 
+            font-size: 3em;
+            background-color: transparent;
+            border: none;
+        }
+        
+        .button {
+            align-items: center;
+            background-color: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: .25rem;
+            box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+            box-sizing: border-box;
+            color: rgba(0, 0, 0, 0.85);
+            cursor: pointer;
+            display: inline-flex;
+            font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            justify-content: center;
+            line-height: 1.25;
+            margin: 0;
+            min-height: 3rem;
+            padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+            /*position: relative;*/
+            text-decoration: none;
+            transition: all 250ms;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: baseline;
+            width: auto;
+        }
+
+        .button:hover,
+        .button:focus {
+            border-color: rgba(0, 0, 0, 0.15);
+            box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+            color: rgba(0, 0, 0, 0.65);
+        }
+
+        .button:hover {
+            transform: translateY(-1px);
+        }
+
+        .button:active {
+            background-color: #F0F0F1;
+            border-color: rgba(0, 0, 0, 0.15);
+            box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+            color: rgba(0, 0, 0, 0.65);
+            transform: translateY(0);
+        }
+    
+        #results{
+            display: none;
+            width: 40vw;
+            background-color: aquamarine;
+            margin: 50px;
+            padding: 20px;
+        }
+        .calculated{
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            height: 90vh;
+        }
+        .calculated p{
+            text-align: center;
+        }
+        #system-size, #result{
+            /* border: 1px solid black; */
+            height: 100px;
+            width: 200px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } 
+        /* The Modal (background) */
+        .modal, .modal-info {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content, .modal-info-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 45%;
+            overflow: auto;
+        }
+
+        /* Close Button */
+        .close, .close-info, .close-results {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus,
+        .close-info:hover,
+        .close-info:focus,
+        .close-results:hover,
+        .close-results:focus
+         {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #solar-image{
+            width: 95%;
+        }
+        @media (width <= 480px){
+            label{
+                font-size: 1.2em;
+            }
+            #inputs, #results{
+                margin: 15px;
+                width: 75vw;
+            }
+            .modal-content, .modal-info-content {
+                width: 85%;
+            }
+            .button #myBtn{
+                background-image: src('mapsgo.svg');
+            }
+            .calculated{
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div id="nav-items">
+            <div>
+                <button class='button' role="button" id="myBtn">Мапа</button>
+                <div id="solar-map" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <img id='solar-image' src='solar-map.png'>
+                        <canvas id="myCanvas" style="display: none;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button id="information-btn">
+                    <img id='information' src="info-circle.svg" alt="information">
+                </button>
+                <div id="instruction" class="modal-info">
+                    <div class="modal-info-content">
+                        <span class="close-info">&times;</span>
+                        <h1>Як користуватись?</h1>
+                        <p>1. Відкрийте мапу, знайдіть свій регіон проживання і відповідне йому денне випромінювання внизу сторінки.</p>
+                        <p>2. Введіть середньомісячне споживання електроенергії у вашому домі. Його можна знайти у рахунку за електроенегрію</p>
+                        <p>3. Введіть потужність однієї сонячної панелі. Її можна знайти у характеристиках сонячної панелі, яку ви бажаєте придбати. Більшість панелей мають потужність 300Вт</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </nav>
+    <section id="main">
+        <div id="inputs">   
+            <label>Денна інтенсивність сонячного випромінювання(з мапи):</label><br>
+            <input type="number" id="solar-activity" value="3.2"><br>
+            <label>Ваше середньомісячне споживання енегрії, кВт*год:</label><br>
+            <input type="number" id="energy-usage" value="100"><br>
+            <label>Потужність однієї сонячної панелі, Вт:</label><br>
+            <input type="number" id="panel-power" value="300"><br>
+            <button class='button' onclick="calculate()" id="results-btn">Розрахувати</button>
+        </div> 
+        <div id='results'>
+            <span class="close-results">&times;</span>
+            <div class="calculated">
+                <p>Потужність системи, кВт:</p><!--Скільки енергії за годину має збирати система-->
+                <div id="system-size"></div>
+                <p>Кількість панелей:</p>
+                <div id="result"></div>
+            </div>
+        </div>
+    </section>
+</body>
+<script>
+    function calculate(){
+        const usageMonthly = document.getElementById("energy-usage").value
+        const solarActivity = document.getElementById("solar-activity").value
+        const panelPower = document.getElementById("panel-power").value
+        let usageDaily = usageMonthly/30;
+        let solarSystemSize = ((usageDaily/solarActivity)*1.2).toFixed(1);
+        
+        let numberOfPanels = Math.round((solarSystemSize * 1000) / panelPower);
+        document.getElementById('system-size').innerText = solarSystemSize;
+        document.getElementById('result').innerText = numberOfPanels;
+        
+        var x = document.getElementById("results"); 
+        x.style.display = "block";
+        x.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+          
+    }
+    
+
+    //Color selection
+    function getColorVariant(rgb) {
+        // Зразки кольорів для порівняння
+        var colorSamples = [
+            [193, 240, 84],
+            [230, 244, 68],
+            [249, 247, 64],
+            [250, 240, 55],
+            [250, 218, 45],
+            [249, 193, 34],
+            [246, 164, 20],
+            [245, 134, 16],
+            [245, 98, 20],
+            [237, 59, 23],
+            [219, 26, 55]
+        ];
+
+        // Відхилення у 20%
+        var deviationPercentage = 0.2;
+
+        // Функція для порівняння кольорів з врахуванням відхилення
+        function compareColor(sample, target) {
+            for (var i = 0; i < sample.length; i++) {
+                var min = Math.round(sample[i] * (1 - deviationPercentage));
+                var max = Math.round(sample[i] * (1 + deviationPercentage));
+                if (target[i] < min || target[i] > max) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Порівнюємо кожен зразок із вхідними даними
+        for (var i = 0; i < colorSamples.length; i++) {
+            if (compareColor(colorSamples[i], rgb)) {
+                // Якщо знаходимо відповідність, повертаємо номер варіанту
+                return i + 1;
+            }
+        }
+
+        // Якщо немає відповідності, повертаємо -1 або інший визначений вами код помилки
+        return -1;
+    }
+
+    //Modal image
+    var modal = document.getElementById("solar-map");
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
+        
+        //console.log('load1')
+        var image = document.getElementById('solar-image');
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+        var solarActivity = document.getElementById('solar-activity')
+        // Встановлюємо атрибут willReadFrequently в true
+        //canvas.willReadFrequently = true;
+       //image.addEventListener('load', function() { 
+            
+            // Встановлюємо розміри канвасу відповідно до зображення
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            // Відображаємо зображення на канві
+            ctx.drawImage(image, 0, 0, image.width, image.height);
+            //console.log(ctx)
+            image.onclick = function(event) {
+                //console.log('load2')
+                let x = event.offsetX;
+                let y = event.offsetY;
+                
+                var pixelData = ctx.getImageData(x, y, 1, 1).data;
+                var colorChannels = [pixelData[0], pixelData[1], pixelData[2]];
+                var variantNumber = getColorVariant(colorChannels);
+                
+                
+                if (variantNumber !== -1) {
+                    solarActivity.value = (variantNumber + 30)/10;
+                    modal.style.display = "none";
+                    console.log('Номер варіанту: ' + variantNumber);
+                } else {
+                    alert('Неправильні дані. Можливо ви натиснули на воду. Оберіть точку ще раз')
+                    console.log('Колір не входить до списку варіантів.');
+                }
+
+            };
+        //});
+        }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+    }
+    //modal info
+    var modalInfo = document.getElementById("instruction");
+    var btnInfo = document.getElementById("information");
+    var spanInfo = document.getElementsByClassName("close-info")[0];
+    btnInfo.onclick = function() {
+        modalInfo.style.display = "block";
+    }
+    spanInfo.onclick = function() {
+        modalInfo.style.display = "none";
+    }
+    window.onclick = function(event) {
+    if (event.target == modalInfo) {
+        modalInfo.style.display = "none";
+    }
+    }
+    //close results button
+    var closeResults = document.getElementsByClassName('close-results')[0];
+    var res = document.getElementById("results");
+    closeResults.onclick = function(){
+        res.style.display = "none";
+    }
+
+</script>
+</html>
